@@ -1,0 +1,52 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: demo
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:~/h2/testdb
+    driver-class-name: org.h2.Driver
+    username: username
+    password: password
+    hikari:
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 180000
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: foo
+zuul:
+  routes:
+    foos:
+      paths: /foos/**
+      url: http://localhost:8081/foos-resources/foos
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url: ${EUREKA_URI:http://localhost:8081/eureka}
+
+swagger:
+  title: SWAGGER-title
+  desc: SWAGGER-desc
+  version: 1.0.0
+  license: SWAGGER-license
+  license-url: SWAGGER-licenseurl
+  contact:
+    name: contact-name
+    url: contact-url
+    email: contact-email
+
+

@@ -1,0 +1,84 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+bootRun {
+    String activeProfile = System.properties['spring.profiles.active']
+    systemProperty "spring.profiles.active", activeProfile
+
+}
+
+if (System.getProperty("spring.profiles.active") == "dev") {
+    println('hello dev')
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main'
+                exclude '**/kafka'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
+        exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+    }
+//    compile('org.springframework.boot:spring-boot-starter-security')
+    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.1.0.RELEASE'
+
+
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-zuul')
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-eureka-client'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("junit:junit")
+
+    // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    if (System.getProperty("spring.profiles.active") != "dev") {
+        compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.2.RELEASE'
+    }
+
+
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    implementation("com.h2database:h2")
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+//    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
+
+}
+
+ext['springCloudVersion'] = 'Greenwich.RC2'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
