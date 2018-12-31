@@ -13,7 +13,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.RestController;
 import sun.security.krb5.internal.HostAddress;
 
+import javax.annotation.PostConstruct;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -36,6 +39,7 @@ public class EurekaClientApplication implements GreetingController {
     public static void main(String[] args) {
         SpringApplication.run(EurekaClientApplication.class, args);
     }
+
 
     @Override
     public String greeting() {

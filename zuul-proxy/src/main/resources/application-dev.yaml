@@ -26,30 +26,6 @@ spring:
     consumer:
       group-id: foo
 
-#zuul:
-#  ignored-services: "*"
-#  routes:
-#    greeting:
-#      path: /spring-cloud-eureka-client/**
-#      serviceId: spring-cloud-eureka-client
-#    test:
-#      path: /test/**
-#      serviceId: test01
-#      stripPrefix: false
-#
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#  client:
-#    register-with-eureka: false
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://10.0.2.1:8761/eureka/
-#
-#ribbon:
-#  eureka:
-#    enabled: true   #important
-
 zuul:
   prefix: /api
   routes:
@@ -58,7 +34,7 @@ zuul:
       serviceId: account-service
     customer:
       path: /customer/**
-      serviceId: spring-cloud-eureka-client
+      serviceId: customer-service
 
 ribbon:
   eureka:
@@ -67,7 +43,7 @@ ribbon:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://10.0.2.1:8761/eureka/
     registerWithEureka: false
 
 
