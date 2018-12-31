@@ -1,8 +1,8 @@
 server:
-  port: 8080
+  port: 8762
 spring:
   application:
-    name: demo
+    name: zuul-server
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:file:~/h2/testdb
@@ -25,18 +25,57 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: foo
+
+#zuul:
+#  ignored-services: "*"
+#  routes:
+#    greeting:
+#      path: /spring-cloud-eureka-client/**
+#      serviceId: spring-cloud-eureka-client
+#    test:
+#      path: /test/**
+#      serviceId: test01
+#      stripPrefix: false
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://10.0.2.1:8761/eureka/
+#
+#ribbon:
+#  eureka:
+#    enabled: true   #important
+
 zuul:
+  prefix: /api
   routes:
-    foos:
-      paths: /foos/**
-      url: http://localhost:8081/foos-resources/foos
+    account:
+      path: /account/**
+      serviceId: account-service
+    customer:
+      path: /customer/**
+      serviceId: spring-cloud-eureka-client
+
+ribbon:
+  eureka:
+    enabled: true
+
 eureka:
-  instance:
-    prefer-ip-address: true
   client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url: ${EUREKA_URI:http://localhost:8081/eureka}
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: false
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 swagger:
   title: SWAGGER-title
